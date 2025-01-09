@@ -1,0 +1,63 @@
+@use './mixins.scss';
+@use './variables.scss';
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+@mixin noise {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../noise.png'); // Adjust the path if necessary
+    background-repeat: repeat;
+    opacity: 0.1; // Adjust for noise intensity
+    pointer-events: none; // Ensure it doesn't interfere with interactions
+    z-index: -1; // Ensure it sits behind the content
+    animation: noiseAnimation 1s steps(10) infinite;
+}
+
+// Keyframes for Noise Animation
+@keyframes noiseAnimation {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Outfit', sans-serif;
+
+    /* Apply a softer pastel light gradient background */
+    background: var(--color-background);
+    position: relative;
+    min-height: 100vh;
+
+    /* Optional: Ensure content covers the viewport */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &::before {
+        @include mixins.noise;
+    }
+}
+
+pre {
+    background-color: var(--color-main-bg);
+    color: var(--color-text);
+    padding: 0.5rem;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+/* Optionally, define a CSS variable for monospace fonts */
+:root {
+    --font-monospace: 'Courier New', Courier, monospace;
+}
