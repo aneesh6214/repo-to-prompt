@@ -9,36 +9,31 @@ type Data = {
   error?: string;
 };
 
-const fetchRepoContents = async (apiUrl: string, parentDir = ''): Promise<[string, string][]> => {
-  const response = await fetch(apiUrl);
-  if (!response.ok) {
-    throw new Error(`Error fetching repository contents: ${response.status}`);
+const fetchRepoContents = async (apiUrl: string, headers: Record<string, string>): Promise<[string, string][]> => {
+  const response = await fetch(apiUrl, { headers });
+  const data = await response.json();
+
+  if (!Array.isArray(data)) {
+    throw new Error('Unexpected API response format.');
   }
 
-  const items = await response.json();
-  const allFiles: [string, string][] = [];
+  const files: [string, string][] = [];
 
-  for (const item of items) {
+  for (const item of data) {
     if (item.type === 'file') {
-      const fileUrl = item.download_url;
-      const filePath = path.join(parentDir, item.name);
-
-      const fileResponse = await fetch(fileUrl);
-      if (fileResponse.ok) {
-        const fileContent = await fileResponse.text();
-        allFiles.push([filePath, fileContent]);
-      } else {
-        console.error(`Error fetching file: ${filePath}`);
+      const fileResponse = await fetch(item.download_url, { headers });
+      if (!fileResponse.ok) {
+        throw new Error(`Failed to fetch file: ${item.path}`);
       }
+      const content = await fileResponse.text();
+      files.push([item.path, content]);
     } else if (item.type === 'dir') {
-      const dirPath = path.join(parentDir, item.name);
-      const subdirApiUrl = item.url;
-      const subFiles = await fetchRepoContents(subdirApiUrl, dirPath);
-      allFiles.push(...subFiles);
+      const subFiles = await fetchRepoContents(item.url, headers);
+      files.push(...subFiles);
     }
   }
 
-  return allFiles;
+  return files;
 };
 
 const generateDirectoryStructure = (files: [string, string][]): string => {
@@ -99,7 +94,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const repo = pathParts[1];
     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents`;
 
-    const allFiles = await fetchRepoContents(apiUrl);
+    const headers = {
+      'Authorization': `token ${process.env.GITHUB_TOKEN}`,
+      'Accept': 'application/vnd.github.v3+json',
+    };
+
+    const allFiles = await fetchRepoContents(apiUrl, headers);
 
     if (allFiles.length === 0) {
       throw new Error('No files found or failed to fetch repository contents.');

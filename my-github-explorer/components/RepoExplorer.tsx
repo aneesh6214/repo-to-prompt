@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import styles from '../styles/RepoExplorer.module.scss';
 import CopyButton from './CopyButton';
+import Loader from './Loader';
 
 const RepoExplorer: React.FC = () => {
   const [repoUrl, setRepoUrl] = useState('');
   const [content, setContent] = useState<string | null>(null);
   const [directory, setDirectory] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -38,44 +39,50 @@ const RepoExplorer: React.FC = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Repository Explorer</h1>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <input
-          type="url"
-          placeholder="Enter repository URL"
-          value={repoUrl}
-          onChange={(e) => setRepoUrl(e.target.value)}
-          required
-          className={styles.input}
-        />
-        <button type="submit" className={styles.button} disabled={loading}>
-          {loading ? 'Loading...' : 'Fetch'}
-        </button>
-      </form>
+    <>
+      <div className={styles.container}>
+        {loading && <div className={styles.overlay}></div>}
+        <h1 className={styles.title}> Wanna Talk to Your Codebase? </h1>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <input
+            type="url"
+            placeholder="Enter repository URL"
+            value={repoUrl}
+            onChange={(e) => setRepoUrl(e.target.value)}
+            required
+            className={styles.input}
+          />
+          <button type="submit" className={styles.button} disabled={loading}>
+            Fetch
+          </button>
+        </form>
 
-      {error && <p className={styles.error}>{error}</p>}
+        {error && <p className={styles.error}>{error}</p>}
 
-      {directory && (
-        <div className={styles.results}>
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>Directory Structure</h2>
-            <CopyButton textToCopy={directory} />
+        {directory && (
+          <div className={styles.results}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Directory Structure</h2>
+              <CopyButton textToCopy={directory} />
+            </div>
+            <pre className={styles.codeBlock}>{directory}</pre>
           </div>
-          <pre className={styles.codeBlock}>{directory}</pre>
-        </div>
-      )}
-    
-      {content && (
-        <div className={styles.results}>
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>Repository Contents</h2>
-            <CopyButton textToCopy={content} />
+        )}
+      
+        {content && (
+          <div className={styles.results}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Repository Contents</h2>
+              <CopyButton textToCopy={content} />
+            </div>
+            <pre className={styles.codeBlock}>{content}</pre>
           </div>
-          <pre className={styles.codeBlock}>{content}</pre>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+      <div className={styles.loaderContainer}>
+      {loading && <Loader />}
+      </div>
+    </>
   );
 };
 
