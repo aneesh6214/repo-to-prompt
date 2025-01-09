@@ -76,7 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(405).json({ error: `Method ${req.method} not allowed` });
   }
 
-  const { repoUrl } = req.body;
+  const { repoUrl, filterMode, filterExtensions } = req.body;
 
   if (!repoUrl) {
     return res.status(400).json({ error: 'Repository URL is required.' });
@@ -99,7 +99,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       'Accept': 'application/vnd.github.v3+json',
     };
 
-    const allFiles = await fetchRepoContents(apiUrl, headers);
+    let allFiles = await fetchRepoContents(apiUrl, headers);
+
+    if (filterExtensions) {
+      const extensions = filterExtensions.split(',').map(ext => ext.trim().toLowerCase());
+      if (filterMode === 'whitelist') {
+        allFiles = allFiles.filter(([filePath]) => {
+          const fileExt = path.extname(filePath).slice(1).toLowerCase();
+          return extensions.includes(fileExt);
+        });
+      } else if (filterMode === 'blacklist') {
+        allFiles = allFiles.filter(([filePath]) => {
+          const fileExt = path.extname(filePath).slice(1).toLowerCase();
+          return !extensions.includes(fileExt);
+        });
+      }
+    }
 
     if (allFiles.length === 0) {
       throw new Error('No files found or failed to fetch repository contents.');

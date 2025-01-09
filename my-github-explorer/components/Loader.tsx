@@ -10,6 +10,9 @@ const Loader = () => {
 }
 
 const StyledWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  
   .loader {
     position: relative;
     box-sizing: border-box;
@@ -65,6 +68,11 @@ const StyledWrapper = styled.div`
     60% {
       opacity: 0.1;
     }
+  }
+
+  .loader {
+    display: inline-block;
+    margin: 0 16px;
   }
 `;
 

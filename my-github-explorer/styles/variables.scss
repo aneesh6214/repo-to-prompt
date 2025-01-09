@@ -9,4 +9,9 @@
   --color-main-bg: #ffffff; /* White */
   --color-button-bg: #ffffff; /* Off White / Light Gray */
   --color-hover: rgb(233, 187, 229); /* Olive Green */
+
+  /* Toggle Switch Colors */
+  --toggle-bg: #ccc;
+  --toggle-checked-bg: var(--color-hover);
+  --toggle-knob-bg: #fff;
 } 

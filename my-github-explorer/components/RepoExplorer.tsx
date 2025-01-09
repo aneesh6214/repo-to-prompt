@@ -9,6 +9,8 @@ const RepoExplorer: React.FC = () => {
   const [directory, setDirectory] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [isWhitelist, setIsWhitelist] = useState<boolean>(true);
+  const [filterExtensions, setFilterExtensions] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +23,7 @@ const RepoExplorer: React.FC = () => {
       const response = await fetch('/api/fetchRepo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ repoUrl }),
+        body: JSON.stringify({ repoUrl, filterMode: isWhitelist ? 'whitelist' : 'blacklist', filterExtensions }),
       });
 
       if (!response.ok) {
@@ -40,7 +42,7 @@ const RepoExplorer: React.FC = () => {
 
   return (
     <>
-      <div className={styles.container}>
+      <div className={styles.container} aria-live="polite">
         {loading && <div className={styles.overlay}></div>}
         <h1 className={styles.title}> Wanna Talk to Your Codebase? </h1>
         <form onSubmit={handleSubmit} className={styles.form}>
@@ -52,8 +54,25 @@ const RepoExplorer: React.FC = () => {
             required
             className={styles.input}
           />
-          <button type="submit" className={styles.button} disabled={loading}>
-            Fetch
+          <div className={styles.filterContainer}>
+            <label>
+              <input
+                type="checkbox"
+                checked={isWhitelist}
+                onChange={() => setIsWhitelist(!isWhitelist)}
+              />
+              {isWhitelist ? 'Whitelist' : 'Blacklist'}
+            </label>
+          </div>
+          <input
+            type="text"
+            placeholder={isWhitelist ? 'tsx, scss' : 'md, json'}
+            value={filterExtensions}
+            onChange={(e) => setFilterExtensions(e.target.value)}
+            className={styles.input}
+          />
+          <button type="submit" className={styles.button} disabled={loading} aria-busy={loading}>
+            {loading ? 'Loading...' : 'Fetch'}
           </button>
         </form>
 
@@ -80,7 +99,7 @@ const RepoExplorer: React.FC = () => {
         )}
       </div>
       <div className={styles.loaderContainer}>
-      {loading && <Loader />}
+        {loading && <Loader />}
       </div>
     </>
   );

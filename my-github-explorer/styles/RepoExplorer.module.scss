@@ -102,10 +102,25 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(233, 187, 229, 0.5); // Semi-transparent gray
+    background-color: rgba(0, 0, 0, 0.15); // Semi-transparent gray
     z-index: 10; // Ensures the overlay is above other content
     pointer-events: all; // Blocks interactions with underlying content
     border-radius: 4px;
+  }
+
+  /* Filter Container Styles */
+  .filterContainer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .filterContainer label {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 1rem;
+    color: var(--color-text);
   }
 
   /* Responsive Adjustments */
