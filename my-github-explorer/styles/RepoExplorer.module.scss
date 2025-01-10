@@ -1,102 +1,86 @@
+/* File: my-github-explorer/styles/RepoExplorer.module.scss */
+
 @use './variables.scss';
 @use './mixins.scss';
 
 .container {
     max-width: 800px;
     margin: 2rem auto;
-    padding: 1rem;
-    background-color: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    //background-color: rgba(255, 255, 255, 0.644);
+    //backdrop-filter: blur(10px);
+    //-webkit-backdrop-filter: blur(10px);
     border-radius: 4px;
     position: relative;
-  }
-  
-  .title {
+}
+
+.title {
     text-align: center;
-    /* Use CSS variable for color */
-    color: var(--color-primary); /* Pastel Lavender */
-    font-size: 2rem;
+    color: var(--color-primary);
+    /* Pastel Lavender */
+    font-size: 3rem;
     font-weight: bold;
-  }
-  
-  .form {
+}
+
+.form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-  }
-  
-  .input {
+}
+
+.input {
     padding: 0.75rem;
     font-size: 1rem;
     border-radius: 4px;
     font-family: var(--font-monospace);
     background-color: var(--color-button-bg);
     border: none;
-  }
-  
-  .button {
+}
+
+.button {
     @include mixins.button;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-  }
-//   .button {
-//     padding: 0.75rem;
-//     font-size: 1rem;
-//     /* Use CSS variables for background and text color */
-//     background-color: var(--color-button-bg); /* Off White / Light Gray */
-//     color: var(--color-text); /* Black */
-//     border: none;
-//     border-radius: 4px;
-//     cursor: pointer;
-//     transition: background-color 0.2s ease-in-out;
-//     font-family: 'Outfit', sans-serif; /* Apply Outfit font to buttons */
-//   }
-  
-//   .button:hover {
-//     background-color: var(--color-hover);
-//   }
-  
-  .results {
+}
+
+.results {
     margin-top: 1rem;
     background-color: transparent;
     border: none;
-    padding: 1rem;
-  }
-  
-  .error {
-    /* Use CSS variable for error color */
+    position: relative; // To position any absolute elements within this container if needed
+}
+
+.error {
     color: var(--color-error);
     text-align: center;
-  }
-  
-  .sectionHeader {
+}
+
+.sectionHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 0.5rem;
-  }
-  
-  /* Replaced global h2 with local class .sectionTitle */
-  .sectionTitle {
-    /* Use CSS variable for color */
-    color: var(--color-primary); /* Pastel Lavender */
-    font-size: 1.5rem;
-  }
-  
-  /* Replaced global pre with local class .codeBlock */
-  .codeBlock {
-    background-color: var(--color-button-bg); /* Consider replacing with a variable if needed */
-    color: var(--color-text); /* Consider replacing with a variable if needed */
+}
+
+.sectionTitle {
+    color: var(--color-primary);
+    /* Pastel Lavender */
+    font-size: 2rem;
+}
+
+.codeBlock {
+    background-color: var(--color-button-bg);
+    /* Off White / Light Gray */
+    color: var(--color-text);
+    /* Black */
     padding: 0.5rem;
     border-radius: 4px;
     font-family: var(--font-monospace);
-  }
-  
-  /* Overlay Styles */
-  .overlay {
+    position: relative; // To position the tokenOverlay within this container
+}
+
+.overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -106,38 +90,55 @@
     z-index: 10; // Ensures the overlay is above other content
     pointer-events: all; // Blocks interactions with underlying content
     border-radius: 4px;
-  }
+}
 
-  /* Filter Container Styles */
-  .filterContainer {
+.filterContainer {
     display: flex;
     align-items: center;
     gap: 1rem;
-  }
-  
-  .filterContainer label {
+}
+
+.filterContainer label {
     display: flex;
     align-items: center;
     gap: 0.25rem;
     font-size: 1rem;
     color: var(--color-text);
-  }
+}
 
-  /* Responsive Adjustments */
-  @media (max-width: 600px) {
-    .container {
-      margin: 1rem;
-      padding: 0.5rem;
-    }
-  }
-
-  .loaderContainer {
+.loaderContainer {
     display: flex;
     margin-top: 0;
     justify-content: center;
     align-items: center;
     height: 75px;
-  }
-  
-  /* Additional Minimalist Styles */
-  /* Removed global selectors and ensured all styles are scoped */
+}
+
+/* TokenOverlay Styles */
+.tokenOverlay {
+    font-family: Outfit;
+    position: absolute;
+    top: 0rem;
+    right: 0.5rem;
+    padding: 0.25rem;
+    background-color: rgba(255, 255, 255, 0.8); // Semi-transparent gray
+    color: #000000; // White text for contrast
+    border-radius: 4px;
+    font-size: 0.875rem; // Slightly smaller font
+    z-index: 20; // Above any other overlays if present
+    pointer-events: none; // Allow interactions with underlying elements
+}
+
+@media (max-width: 600px) {
+    .container {
+        margin: 1rem;
+        padding: 0.5rem;
+    }
+
+    .tokenOverlay {
+        top: 0.25rem;
+        right: 0.25rem;
+        font-size: 0.75rem;
+        padding: 0.2rem 0.4rem;
+    }
+}
