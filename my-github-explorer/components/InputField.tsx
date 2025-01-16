@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FetchButton = () => {
+const InputField = () => {
     return (
         <button className="group group-hover:before:duration-500 group-hover:after:duration-500 
         after:duration-500 hover:border-rose-300 hover:before:[box-shadow:_20px_20px_20px_30px_#a21caf] 
@@ -11,10 +11,14 @@ const FetchButton = () => {
         before:content[''] before:right-1 before:top-1 before:z-10 before:bg-violet-500 before:rounded-full 
         before:blur-lg after:absolute after:z-10 after:w-20 after:h-20 after:content[''] after:bg-rose-300 after:right-8 
         after:top-3 after:rounded-full after:blur-lg">
-            Generate
+            <input 
+                type="text" 
+                className="bg-transparent text-gray-50 border-none focus:outline-none" 
+                placeholder="Input" 
+            />
         </button>
     );
 }
 
-export default FetchButton;
+export default InputField;
 

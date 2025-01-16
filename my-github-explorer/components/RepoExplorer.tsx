@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import styles from '../styles/RepoExplorer.module.scss';
 import CopyButton from './CopyButton';
 import Loader from './Loader';
-
+import FetchButton from './FetchButton';
+import InputField from './InputField';
 interface TokenEstimates {
   directoryTokens: number;
   contentTokens: number;
@@ -14,7 +15,7 @@ const RepoExplorer: React.FC = () => {
   const [repoUrl, setRepoUrl] = useState('');
   const [content, setContent] = useState<string | null>(null);
   const [directory, setDirectory] = useState<string | null>(null);
-  const [tokenEstimates, setTokenEstimates] = useState<TokenEstimates | null>(null); // New state for token estimates
+  const [tokenEstimates, setTokenEstimates] = useState<TokenEstimates | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isWhitelist, setIsWhitelist] = useState<boolean>(true);
@@ -26,10 +27,10 @@ const RepoExplorer: React.FC = () => {
     setError(null);
     setContent(null);
     setDirectory(null);
-    setTokenEstimates(null); // Reset token estimates on new submission
+    setTokenEstimates(null);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/fetchRepo', { // Update to your Python backend URL
+      const response = await fetch('http://127.0.0.1:8000/fetchRepo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -49,7 +50,7 @@ const RepoExplorer: React.FC = () => {
       setContent(data.repoContents);
       setDirectory(data.directoryStructure);
       
-      if (data.tokenEstimates) { // Check if tokenEstimates are present
+      if (data.tokenEstimates) {
         setTokenEstimates({
           directoryTokens: data.tokenEstimates.directoryTokens,
           contentTokens: data.tokenEstimates.contentTokens,
@@ -76,26 +77,26 @@ const RepoExplorer: React.FC = () => {
             required
             className={styles.input}
           />
+          <div className={styles.submitArea}>
           <div className={styles.filterContainer}>
-            <label>
-              <input
-                type="checkbox"
-                checked={isWhitelist}
-                onChange={() => setIsWhitelist(!isWhitelist)}
-              />
-              {isWhitelist ? 'Whitelist' : 'Blacklist'}
-            </label>
+          <label>
+                <input
+                  type="checkbox"
+                  checked={isWhitelist}
+                  onChange={() => setIsWhitelist(!isWhitelist)}
+                />
+                {isWhitelist ? 'Whitelist' : 'Blacklist'}
+              </label>
+            <input
+              type="text"
+              placeholder={isWhitelist ? 'tsx, scss' : 'md, json'}
+              value={filterExtensions}
+              onChange={(e) => setFilterExtensions(e.target.value)}
+              className={styles.input}
+            />
+            </div>
+            <FetchButton />
           </div>
-          <input
-            type="text"
-            placeholder={isWhitelist ? 'tsx, scss' : 'md, json'}
-            value={filterExtensions}
-            onChange={(e) => setFilterExtensions(e.target.value)}
-            className={styles.input}
-          />
-          <button type="submit" className={styles.button} disabled={loading} aria-busy={loading}>
-            {loading ? 'Loading...' : 'Fetch'}
-          </button>
         </form>
 
         {error && <p className={styles.error}>{error}</p>}

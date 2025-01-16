@@ -1,6 +1,9 @@
+@forward "tailwindcss/base";
+@forward "tailwindcss/components";
+@forward "tailwindcss/utilities";
 @use './mixins.scss';
 @use './variables.scss';
-@use './tailwind.scss';
+
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
