@@ -75,11 +75,16 @@ const RepoExplorer: React.FC = () => {
             value={repoUrl}
             onChange={(e) => setRepoUrl(e.target.value)}
             required
-            className={styles.input}
+            className={"bg-neutral-800 " + styles.input}
           />
           <div className={styles.submitArea}>
-          <div className={styles.filterContainer}>
-          <label>
+            <div className={styles.filterContainer}>
+            <InputField 
+                value={filterExtensions} 
+                onChange={(e) => setFilterExtensions(e.target.value)} 
+                placeholder={isWhitelist ? 'e.g. tsx, scss' : 'e.g. md, json'} 
+              />
+              <label>
                 <input
                   type="checkbox"
                   checked={isWhitelist}
@@ -87,13 +92,11 @@ const RepoExplorer: React.FC = () => {
                 />
                 {isWhitelist ? 'Whitelist' : 'Blacklist'}
               </label>
-            <input
-              type="text"
-              placeholder={isWhitelist ? 'tsx, scss' : 'md, json'}
-              value={filterExtensions}
-              onChange={(e) => setFilterExtensions(e.target.value)}
-              className={styles.input}
-            />
+              {/* <InputField 
+                value={filterExtensions} 
+                onChange={(e) => setFilterExtensions(e.target.value)} 
+                placeholder={isWhitelist ? 'e.g. tsx, scss' : 'e.g. md, json'} 
+              /> */}
             </div>
             <FetchButton />
           </div>
